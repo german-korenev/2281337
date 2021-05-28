@@ -1,0 +1,156 @@
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QWidget,QButtonGroup,QApplication, QGroupBox, QPushButton, QLabel, QVBoxLayout, QHBoxLayout, QMessageBox, QRadioButton
+from random import shuffle, randint
+app = QApplication([])
+main_win = QWidget()
+
+class Question():
+    def __init__(self, question, right_answer, wrong1, wrong2, wrong3):
+        self.question = question
+        self.right_answer = right_answer
+        self.wrong1 = wrong1
+        self.wrong2 = wrong2
+        self.wrong3 = wrong3
+
+lb_question = QLabel ('Какой национальности не существует?')
+RadioGroupBox=QGroupBox("Варианты ответов")
+answerButton = QPushButton('Ответить')
+answer1 = QRadioButton('Энцы')
+answer2 = QRadioButton('Смурфы')
+answer3 = QRadioButton('Чулымцы')
+answer4 = QRadioButton('Алеуты')
+
+layoutV1 = QVBoxLayout()
+layoutV2 = QHBoxLayout()
+layoutV3 = QHBoxLayout()
+layoutV2.addWidget(answer1)
+layoutV2.addWidget(answer2)
+layoutV3.addWidget(answer3)
+layoutV3.addWidget(answer4)
+layoutV1.addLayout(layoutV2)
+layoutV1.addLayout(layoutV3)
+
+def show_correct(res):
+    text1.setText(res)
+    show_result()
+
+RadioGroupBox.setLayout(layoutV1)
+main_layout4 = QVBoxLayout()
+def show_result():
+    RadioGroupBox.hide()
+    answerGroupBox.show()
+    answerButton.setText('Следующий вопрос')
+def show_question():
+    answerGroupBox.hide()
+    RadioGroupBox.show()
+    answerButton.setText('Ответить')
+    RadioGroup.setExclusive(False)
+    answer1.setChecked(False)
+    answer2.setChecked(False)
+    answer3.setChecked(False)
+    answer4.setChecked(False)
+    RadioGroup.setExclusive(True)
+def start_test():
+    if answerButton.text() == 'Ответить':
+        show_result()
+    else:
+        show_question()
+
+def click_OK():
+    if answerButton.text() == 'Ответить':
+        check_answer()
+    else:
+        next_question()
+
+answer = [answer1, answer2, answer3, answer4]
+
+def ask(q):
+    shuffle(answer)
+    answer[0].setText(q.right_answer)
+    answer[1].setText(q.wrong1)
+    answer[2].setText(q.wrong2)
+    answer[3].setText(q.wrong3)
+    lb_question.setText(q.question)
+    text2.setText(q.right_answer)
+    show_question()
+
+question_list = []
+
+q1 = Question('Когда Гагарин полетел в космос?', '12 апреля 1961 года', '21 апреля 1961 года', '12 марта 1971 года', '1 апреля 2021 года')
+q2 = Question('Кто из перечисленных людей физик-ядерщик?', 'Glenn Theodore Seaborg', 'Пётр I', 'кто-то', 'Гагарин')       
+q3 = Question('Кто из перечисленных изобрёл телевизор?', 'Нипков Пауль Юлиус Готлиб', 'он ', 'я', 'Гагарин')
+q4 = Question('Кто из перечисленных изобрёл интернет?', 'Роберт Эллиот Кан', 'Винтон Серф', 'Леонард Клейнрок', 'Лоуренс Робертс')
+q5 = Question('Аппарат для производства электрических токов высокой частоты и потенциала?', 'Tesla coil', 'телевизор', 'радио', 'компухтер')
+q6 = Question('Когда был собран первый ВАЗ-2101?', '19 апреля 1970 года', '31 августа 1966 года', '25 мая 1990 года', '11 сентября 1971 года')
+q7 = Question('В каком году был выпущен первый мотоцикл Иж Планета-5?', '1987', '1951', '2008', '1976')
+q8 = Question('Когда был выпущен первый iphone?', '9 января 2007 года', '7 марта 2010 года', '22 мая 2012 года', '26 ноября 2005 года')
+q9 = Question('Что такое шрус?', 'Шарнир равных угловых скоростей', 'тут', 'я', 'помогу')
+q10 = Question('Что такое поп ит?', 'анти стресс', 'кто?', 'что?', 'пельменница')
+
+question_list.append(q1)
+question_list.append(q2)
+question_list.append(q3)
+question_list.append(q4)
+question_list.append(q5)
+question_list.append(q6)
+question_list.append(q7)
+question_list.append(q8)
+question_list.append(q9)
+question_list.append(q10)
+
+RadioGroupBox.hide()
+answerGroupBox=QGroupBox("Результат теста")
+text1=QLabel('Правильно/неправильно')
+text2=QLabel('Правельный ответ')
+main_layout4.addWidget(text1)
+main_layout4.addWidget(text2)
+answerGroupBox.setLayout(main_layout4)
+answerGroupBox.hide()
+
+layout_1 = QHBoxLayout()
+layout_2 = QHBoxLayout()
+layout_3 = QHBoxLayout()
+layout_1.addWidget(lb_question)
+layout_2.addWidget(RadioGroupBox)
+layout_3.addWidget(answerButton)
+layout_2.addWidget(answerGroupBox)
+
+layout_main = QVBoxLayout()
+layout_main.addLayout(layout_1)
+layout_main.addLayout(layout_2)
+layout_main.addLayout(layout_3)
+RadioGroup = QButtonGroup()
+RadioGroup.addButton(answer1)
+RadioGroup.addButton(answer2)
+RadioGroup.addButton(answer3)
+RadioGroup.addButton(answer4)
+q = Question('Какой национальности не существует?','Энцы', 'Смурфы', 'Чулымцы','Алеуты')
+ask(q)
+
+def check_answer():
+    if answer[0].isChecked():
+        show_correct('Правильно!')
+        main_win.score += 1
+    else:
+        if answer[1].isChecked() or answer[2].isChecked() or answer[3].isChecked():
+            show_correct('Неверно!')
+
+def next_question():
+
+    main_win.total += 1
+    cur_question = randint(0, len(question_list) - 1)
+    q = question_list[cur_question]
+    ask(q)
+    print('Всего: ', main_win.total)
+    print('Правельных вопросов: ', main_win.score)
+    print('Рейтинг:', main_win.score / main_win.total * 100 )
+
+answerButton.clicked.connect(click_OK)
+
+main_win.score = 0
+main_win.total = 0
+next_question()
+
+main_win.setLayout(layout_main)
+main_win.show()
+app.exec_()
